@@ -7,13 +7,8 @@ const path = require('path');
 const cors = require('cors');
 
 // 리소스가 있는 위치 경로 nextjs 폴더경로랑은 다른거임
-const indexRouter = require('./routes');
-const userRouter = require('./routes/user');
-const authRouter = require('./routes/auth');
-const profileRouter = require('./routes/profile');
-const productRouter = require('./routes/product');
 const linkerRouter = require('./routes/linker');
-const occupationRouter = require('./routes/occupation');
+const seriesRouter = require('./routes/series');
 
 // dotenv 활성화
 dotenv.config();
@@ -62,13 +57,8 @@ app.use(
 );
 
 // 라우터 설정
-app.use(indexRouter);
-app.use(userRouter);
-app.use(authRouter);
-app.use(profileRouter);
-app.use(productRouter);
 app.use(linkerRouter);
-app.use(occupationRouter);
+app.use(seriesRouter);
 
 // 에러처리 미들웨어, 매개변수 사용하지 않아도 4개 다 넣어야함
 app.use((err, req, res, next) => {

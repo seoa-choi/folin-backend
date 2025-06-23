@@ -31,11 +31,11 @@ router.get('/linker', (req, res) => {
 
   // 코멘트 있는 데이터 가져오기
   const sqlWithComment = `SELECT l.*, o.occupation, ld.image_url, ld.author_info
-FROM linker l
-LEFT JOIN occupation o ON l.occupation_id = o.occupation_id
-LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
-WHERE l.comment IS NOT NULL AND LENGTH(TRIM(l.comment)) > 0
-ORDER BY l.created_at DESC;`;
+    FROM linker l
+    LEFT JOIN occupation o ON l.occupation_id = o.occupation_id
+    LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
+    WHERE l.comment IS NOT NULL AND LENGTH(TRIM(l.comment)) > 0
+    ORDER BY l.created_at DESC;`;
 
   // 코멘트 없는 데이터 가져오기
   const sqlNoComment =
