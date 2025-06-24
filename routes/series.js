@@ -2,6 +2,29 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../config/mysql');
 
+router.get('/series/:seriesId', (req, res) => {
+  const pDetail = `SELECT
+    ct.title_id,
+    ct.title AS series_title,
+    p.proposal_id,
+    p.why,
+    p.for_whom1,
+    p.for_whom2,
+    p.for_whom3,
+    p.created_at
+    FROM proposal p
+    INNER JOIN contents_title ct ON p.title_id = ct.title_id
+    ORDER BY ct.title_id, p.proposal_id;`;
+
+  connection.query(pDetail, (err, result) => {
+    if (err) {
+      console.error('error', err.message);
+      return res.status(500).send('Database error');
+    }
+    res.json(result);
+  });
+});
+
 router.get('/series', (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 10;
