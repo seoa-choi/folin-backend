@@ -2,7 +2,45 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../config/mysql');
 
+// router.get('/article/:articleId', (req, res) => {
+//   const articleSeries = `
+//     SELECT
+//     ct.title_id,
+//     ct.title AS series_title,
+//     sc.contents_id,
+//     sc.sub_title,
+//     sc.linkers,
+//     sc.img_url,
+//     sc.content_type,
+//     sc.created_at
+//     FROM series_contents sc
+//     INNER JOIN contents_title ct ON sc.title_id = ct.title_id
+//     WHERE sc.content_type = 'article'
+//     ORDER BY ct.title_id, sc.contents_id`;
+
+//   connection.query(articleSeries, (err, result) => {
+//     if (err) {
+//       console.error('error', err.message);
+//       return res.status(500).send('Database error');
+//     }
+//     res.json(result);
+//   });
+// });
+
 router.get('/article/:articleId', (req, res) => {
+  const pDetail = `SELECT
+    ct.title_id,
+    ct.title AS series_title,
+    p.proposal_id,
+    p.why,
+    p.for_whom1,
+    p.for_whom2,
+    p.for_whom3,
+    p.created_at
+    FROM proposal p
+    INNER JOIN contents_title ct ON p.title_id = ct.title_id
+    ORDER BY ct.title_id, p.proposal_id;`;
+
   const articleSeries = `
     SELECT
     ct.title_id,
@@ -18,12 +56,19 @@ router.get('/article/:articleId', (req, res) => {
     WHERE sc.content_type = 'article'
     ORDER BY ct.title_id, sc.contents_id`;
 
-  connection.query(articleSeries, (err, result) => {
+  connection.query(pDetail, (err, result) => {
     if (err) {
       console.error('error', err.message);
       return res.status(500).send('Database error');
     }
-    res.json(result);
+
+    connection.query(articleSeries, (err, articleResult) => {
+      if (err) {
+        console.error('error', err.message);
+        return res.status(500).send('Database error');
+      }
+      res.json({ result, articleResult });
+    });
   });
 });
 
