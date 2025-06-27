@@ -2,32 +2,8 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../config/mysql');
 
-// router.get('/article/:articleId', (req, res) => {
-//   const articleSeries = `
-//     SELECT
-//     ct.title_id,
-//     ct.title AS series_title,
-//     sc.contents_id,
-//     sc.sub_title,
-//     sc.linkers,
-//     sc.img_url,
-//     sc.content_type,
-//     sc.created_at
-//     FROM series_contents sc
-//     INNER JOIN contents_title ct ON sc.title_id = ct.title_id
-//     WHERE sc.content_type = 'article'
-//     ORDER BY ct.title_id, sc.contents_id`;
-
-//   connection.query(articleSeries, (err, result) => {
-//     if (err) {
-//       console.error('error', err.message);
-//       return res.status(500).send('Database error');
-//     }
-//     res.json(result);
-//   });
-// });
-
-router.get('/article/:articleId', (req, res) => {
+// 메인에 필요한 데이터, 상단에 둬야 id로 인식 안함
+router.get('/article/main', (req, res) => {
   const pDetail = `SELECT
     ct.title_id,
     ct.title AS series_title,
@@ -69,6 +45,31 @@ router.get('/article/:articleId', (req, res) => {
       }
       res.json({ result, articleResult });
     });
+  });
+});
+
+router.get('/article/:articleId', (req, res) => {
+  const articleSeries = `
+    SELECT
+    ct.title_id,
+    ct.title AS series_title,
+    sc.contents_id,
+    sc.sub_title,
+    sc.linkers,
+    sc.img_url,
+    sc.content_type,
+    sc.created_at
+    FROM series_contents sc
+    INNER JOIN contents_title ct ON sc.title_id = ct.title_id
+    WHERE sc.content_type = 'article'
+    ORDER BY ct.title_id, sc.contents_id`;
+
+  connection.query(articleSeries, (err, result) => {
+    if (err) {
+      console.error('error', err.message);
+      return res.status(500).send('Database error');
+    }
+    res.json(result);
   });
 });
 
