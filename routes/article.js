@@ -50,29 +50,105 @@ router.get('/article/main', (req, res) => {
 
 router.get('/article/:articleId', (req, res) => {
   const articleSeries = `
-    SELECT
-    ct.title_id,
-    ct.title AS series_title,
-    sc.contents_id,
-    sc.sub_title,
-    sc.linkers,
-    sc.img_url,
-    sc.content_type,
-    sc.created_at
-    FROM series_contents sc
-    INNER JOIN contents_title ct ON sc.title_id = ct.title_id
-    WHERE sc.content_type = 'article'
-    ORDER BY ct.title_id, sc.contents_id`;
+SELECT
+  ct.title_id,
+  ct.title AS series_title,
+  sc.contents_id,
+  sc.sub_title,
+  sc.img_url,
+  sc.created_at,
+  cd.sentence1,
+  cd.sentence2,
+  cd.sentence3,
+  cd.h3,
+  cd.p,
+  l.linker_id,
+  l.author,
+  l.affiliation,
+  ld.image_url AS linker_details_img_url
+FROM contents_title ct
+JOIN series_contents sc ON ct.title_id = sc.title_id
+LEFT JOIN contents_linker_map clm ON sc.contents_id = clm.contents_id
+LEFT JOIN linker l ON clm.linker_id = l.linker_id
+LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
+LEFT JOIN contents_detail cd ON sc.contents_id = cd.contents_id
+WHERE sc.content_type = 'article'
+ORDER BY ct.title_id, sc.contents_id, l.linker_id;`;
 
   connection.query(articleSeries, (err, result) => {
     if (err) {
       console.error('error', err.message);
       return res.status(500).send('Database error');
     }
-    res.json(result);
+    const grouped = {};
+
+    result.forEach((row) => {
+      const id = row.contents_id;
+
+      if (!grouped[id]) {
+        grouped[id] = {
+          contents_id: id,
+          sub_title: row.sub_title,
+          img_url: row.img_url,
+          created_at: row.created_at,
+          series_title: row.series_title,
+          detail: {
+            sentence1: row.sentence1,
+            sentence2: row.sentence2,
+            sentence3: row.sentence3,
+            h3: row.h3,
+            p: row.p,
+          },
+          linkers: [],
+        };
+      }
+
+      // 중복 링커 방지
+      if (
+        row.linker_id &&
+        !grouped[id].linkers.some((l) => l.linker_id === row.linker_id)
+      ) {
+        grouped[id].linkers.push({
+          linker_id: row.linker_id,
+          author: row.author,
+          affiliation: row.affiliation,
+          image_url: row.linker_details_img_url,
+        });
+      }
+    });
+
+    const finalList = Object.values(grouped);
+
+    res.json(finalList);
   });
 });
 
+// router.get('/article/:articleId', (req, res) => {
+//   const articleSeries = `
+//     SELECT
+//     ct.title_id,
+//     ct.title AS series_title,
+//     sc.contents_id,
+//     sc.sub_title,
+//     sc.linkers,
+//     sc.img_url,
+//     sc.content_type,
+//     sc.created_at
+//     FROM series_contents sc
+//     INNER JOIN contents_title ct ON sc.title_id = ct.title_id
+//     WHERE sc.content_type = 'article'
+//     ORDER BY ct.title_id, sc.contents_id`;
+
+//   connection.query(articleSeries, (err, result) => {
+//     if (err) {
+//       console.error('error', err.message);
+//       return res.status(500).send('Database error');
+//     }
+//     res.json(result);
+//   });
+// });
+
+//
 router.get('/article', (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 30;

@@ -11,6 +11,7 @@ const linkerRouter = require('./routes/linker');
 const seriesRouter = require('./routes/series');
 const articleRouter = require('./routes/article');
 const videoRouter = require('./routes/video');
+const articleInfoRouter = require('./routes/article_info');
 
 // dotenv 활성화
 dotenv.config();
@@ -63,6 +64,7 @@ app.use(linkerRouter);
 app.use(seriesRouter);
 app.use(articleRouter);
 app.use(videoRouter);
+app.use(articleInfoRouter);
 
 // 에러처리 미들웨어, 매개변수 사용하지 않아도 4개 다 넣어야함
 app.use((err, req, res, next) => {
