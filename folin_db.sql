@@ -887,26 +887,26 @@ SELECT * FROM proposal_keywords_map;
 
 
 
--- 콘텐츠
-SELECT sc.*
-FROM series_contents sc
-JOIN content_keywords_map ckm ON sc.title_id = ckm.contents_id
-JOIN keywords k ON ckm.keyword_id = k.keyword_id
+-- -- 콘텐츠
+-- SELECT sc.*
+-- FROM series_contents sc
+-- JOIN content_keywords_map ckm ON sc.title_id = ckm.contents_id
+-- JOIN keywords k ON ckm.keyword_id = k.keyword_id
 
-WHERE k.name = '커리어'
-LIMIT 0, 1000;
+-- WHERE k.name = '커리어'
+-- LIMIT 0, 1000;
 
--- 링커
-SELECT l.* FROM linker l
-JOIN linker_keywords_map lkm ON l.linker_id = lkm.linker_id
-JOIN keywords k ON lkm.keyword_id = k.keyword_id
+-- -- 링커
+-- SELECT l.* FROM linker l
+-- JOIN linker_keywords_map lkm ON l.linker_id = lkm.linker_id
+-- JOIN keywords k ON lkm.keyword_id = k.keyword_id
 
-WHERE k.name = '기획';
+-- WHERE k.name = '기획';
 
--- proposal
-SELECT p.*
-FROM proposal p
-JOIN proposal_keywords_map pkm ON p.proposal_id = pkm.proposal_id
-JOIN keywords k ON pkm.keyword_id = k.keyword_id;
+-- -- proposal
+-- SELECT p.*
+-- FROM proposal p
+-- JOIN proposal_keywords_map pkm ON p.proposal_id = pkm.proposal_id
+-- JOIN keywords k ON pkm.keyword_id = k.keyword_id;
 
 SHOW DATABASES;
