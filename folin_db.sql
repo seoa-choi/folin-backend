@@ -24,7 +24,7 @@ INSERT INTO occupation (occupation) VALUES
 
 SELECT * FROM occupation;
 
--- 테이블 지우기 
+
 CREATE TABLE linker (
     linker_id INT AUTO_INCREMENT PRIMARY KEY,
     -- 소개 게시글

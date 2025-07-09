@@ -13,9 +13,11 @@ const connection = mysql.createPool({
   queueLimit: 0,
 });
 
-connection.getConnection((err) => {
-  if (err) console.error('mysql connection error : ' + err);
-  console.log('mysql connected successfully');
-});
+// connection.getConnection((err) => {
+//   if (err) console.error('mysql connection error : ' + err);
+//   console.log('mysql connected successfully');
+// });
 
 module.exports = connection;
+
+// createPool 자동연결, 자동복구 - 처음에 연결이 안되거나 에러가 나면 계속 연결 시도를 함
