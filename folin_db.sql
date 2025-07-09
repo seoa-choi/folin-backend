@@ -9,7 +9,7 @@ CREATE TABLE occupation (
 	occupation_id INT AUTO_INCREMENT PRIMARY KEY,
 	occupation VARCHAR(50) NOT NULL
 );
-DESC occupation;
+-- DESC occupation;
 
 INSERT INTO occupation (occupation) VALUES
 ('전체'),
@@ -22,7 +22,7 @@ INSERT INTO occupation (occupation) VALUES
 ('공간'),
 ('테크');
 
-SELECT * FROM occupation;
+-- SELECT * FROM occupation;
 
 
 CREATE TABLE linker (
@@ -37,7 +37,7 @@ CREATE TABLE linker (
     -- 외래키
     occupation_id INT
 );
-DESC linker;
+-- DESC linker;
 
 INSERT INTO linker (comment, author, affiliation, occupation_id) VALUES
 ('기술자 아닌 해결사가 되세요.', '장인성', '우아한형제들 CBO', 2),
@@ -80,7 +80,7 @@ INSERT INTO linker (comment, author, affiliation, occupation_id) VALUES
 (NULL, '신동혁', '디자이너', 4),
 (NULL, '한현수', '디자이너', 4);
 
-SELECT * FROM linker;
+-- SELECT * FROM linker;
 
 CREATE TABLE linker_details (
 	image_url VARCHAR(255) NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE linker_details (
     -- 외래 키
     linker_id INT
 );
-DESC linker_details;
+-- DESC linker_details;
 
 
 INSERT INTO linker_details (image_url, author_info, linker_id) VALUES 
@@ -151,33 +151,33 @@ INSERT INTO linker_details (image_url, author_info, linker_id) VALUES
 ('/images/linker/linker_donghyuk.jpg', '신해옥과 함께 스튜디오 신신에서 활동 중이다. 스튜디오 신신은 매체의 구조를 집요하게 탐구하며 그래픽 디자인을 깊이 있게 확장해 왔다. 특히 종이, 인쇄 기법, 제본 방식, 후가공 등의 요소를 해석해 한 권의 책으로 결합하는 방법론으로 주목받았다. 독일 \'세계에서 가장 아름다운 책\' 국제 공모전에서 최고상인 골든레터를 수상했다. 신동혁은 디자인의 역사와 양식, 관습과 유래를 탐구하며 전통적인 디자인 산물의 물질성과 물리적 조건을 실험한다.', 35),
 ('/images/linker/linker_hyeonsoo.png', '금속, 제품 디자인을 전공하고 패션, 운송기기 등 여러 영역의 디자인을 경험했다. 다양한 디자이너들과 협업 경험을 토대로 디자인 스튜디오 디시테를 창업했다. 공간 디자인과 브랜드 디자인 등 여러 프로젝트를 직접 이끌고 있다.', 36);
 
-SELECT * FROM linker_details;
+-- SELECT * FROM linker_details;
 
 
 
-SELECT COUNT(*) AS totalCount
-FROM linker l
-LEFT JOIN occupation o ON l.occupation_id = o.occupation_id
-LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
-WHERE o.occupation = '전체';
+-- SELECT COUNT(*) AS totalCount
+-- FROM linker l
+-- LEFT JOIN occupation o ON l.occupation_id = o.occupation_id
+-- LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
+-- WHERE o.occupation = '전체';
 
--- 코멘트가 있는 데이터
-SELECT l.*, o.occupation, ld.image_url, ld.author_info  
-FROM linker l  
-LEFT JOIN occupation o ON l.occupation_id = o.occupation_id  
-LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id  
-WHERE l.comment IS NOT NULL AND LENGTH(TRIM(l.comment)) > 0  
-ORDER BY l.created_at DESC  
-LIMIT 12 OFFSET 0;
+-- -- 코멘트가 있는 데이터
+-- SELECT l.*, o.occupation, ld.image_url, ld.author_info  
+-- FROM linker l  
+-- LEFT JOIN occupation o ON l.occupation_id = o.occupation_id  
+-- LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id  
+-- WHERE l.comment IS NOT NULL AND LENGTH(TRIM(l.comment)) > 0  
+-- ORDER BY l.created_at DESC  
+-- LIMIT 12 OFFSET 0;
 
--- 코멘트가 없는 데이터
-SELECT l.*, o.occupation, ld.image_url, ld.author_info  
-FROM linker l  
-LEFT JOIN occupation o ON l.occupation_id = o.occupation_id  
-LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id  
-WHERE (l.comment IS NULL OR LENGTH(TRIM(l.comment)) = 0)  
-ORDER BY l.created_at DESC  
-LIMIT 12 OFFSET 0;
+-- -- 코멘트가 없는 데이터
+-- SELECT l.*, o.occupation, ld.image_url, ld.author_info  
+-- FROM linker l  
+-- LEFT JOIN occupation o ON l.occupation_id = o.occupation_id  
+-- LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id  
+-- WHERE (l.comment IS NULL OR LENGTH(TRIM(l.comment)) = 0)  
+-- ORDER BY l.created_at DESC  
+-- LIMIT 12 OFFSET 0;
 
 
 -- 시리즈 데이터 생성하기 - 시리즈, 아티클, 비디오 탭
@@ -185,14 +185,14 @@ CREATE TABLE series_tab (
     series_id INT AUTO_INCREMENT PRIMARY KEY,
     tit VARCHAR(50) NOT NULL
 );
-DESC series_tab;
+-- DESC series_tab;
 
 INSERT INTO series_tab (tit) VALUES 
 ("시리즈로 보기"),
 ("아티클만 보기"),
 ("비디오만 보기");
 
-SELECT * FROM series_tab;
+-- SELECT * FROM series_tab;
 
 
 
@@ -201,7 +201,7 @@ CREATE TABLE contents_title (
 	title VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
-DESC contents_title;
+-- DESC contents_title;
 
 
 INSERT INTO contents_title (title) VALUES 
@@ -236,7 +236,7 @@ INSERT INTO contents_title (title) VALUES
 ('스포츠 마케팅 플레이어'),
 ('번아웃 생존기');
 
-SELECT * FROM contents_title;
+-- SELECT * FROM contents_title;
 
 
 -- linker  + contents_title
@@ -246,7 +246,7 @@ CREATE TABLE contents_title_linker_map (
   linker_id INT NOT NULL
 );
 
-DESC contents_title_linker_map;
+-- DESC contents_title_linker_map;
 
 -- 없으면 NULL 안하고 5-폴인이 만난 사람에 넣음
 INSERT INTO contents_title_linker_map (title_id, linker_id) VALUES 
@@ -287,21 +287,21 @@ INSERT INTO contents_title_linker_map (title_id, linker_id) VALUES
 (13, 35),
 (11, 36);
 
-SELECT 
-  ct.title_id,
-  ct.title,
-  l.linker_id,
-  l.author,
-  l.affiliation,
-  l.comment,
-  ld.image_url,
-  ld.author_info
-FROM 
-  contents_title ct
-JOIN contents_title_linker_map map ON ct.title_id = map.title_id
-JOIN linker l ON map.linker_id = l.linker_id
-LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
-ORDER BY ct.title_id, l.linker_id;
+-- SELECT 
+--   ct.title_id,
+--   ct.title,
+--   l.linker_id,
+--   l.author,
+--   l.affiliation,
+--   l.comment,
+--   ld.image_url,
+--   ld.author_info
+-- FROM 
+--   contents_title ct
+-- JOIN contents_title_linker_map map ON ct.title_id = map.title_id
+-- JOIN linker l ON map.linker_id = l.linker_id
+-- LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
+-- ORDER BY ct.title_id, l.linker_id;
 
 
 
@@ -315,7 +315,7 @@ CREATE TABLE series_contents (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 	updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
-DESC series_contents;
+-- DESC series_contents;
 
 -- 비디오 없어서 컨텐트타입 안넣었음
 INSERT INTO series_contents (title_id, sub_title, linkers, img_url) VALUES
@@ -359,22 +359,22 @@ INSERT INTO series_contents (title_id, sub_title, linkers, img_url) VALUES
 (11, '"저속노화, 그다음은?" 정희원 교수×CJ햇반 협업 비하인드', '정희원 김숙진 김유림', '/images/series/1747970985204_a_11435-m.jpg'),
 (7, '패배감 젖은 팀 살리려면? 실적 10배 키운 증권사 대표의 전략', '임재택', '/images/series/1747103681712_a_11364-3.jpg');
 
-SELECT * FROM series_contents;
+-- SELECT * FROM series_contents;
 
 
 -- contents_title, series_contents title_id 매개로 컨텐츠에 콘텐츠타이틀이 있는 것만 출력 없으면 아예 출력 안됨
-SELECT
-  ct.title_id,
-  ct.title AS series_title,
-  sc.contents_id,
-  sc.sub_title,
-  sc.linkers,
-  sc.img_url,
-  sc.content_type,
-  sc.created_at
-FROM series_contents sc
-INNER JOIN contents_title ct ON sc.title_id = ct.title_id
-ORDER BY ct.title_id, sc.contents_id;
+-- SELECT
+--   ct.title_id,
+--   ct.title AS series_title,
+--   sc.contents_id,
+--   sc.sub_title,
+--   sc.linkers,
+--   sc.img_url,
+--   sc.content_type,
+--   sc.created_at
+-- FROM series_contents sc
+-- INNER JOIN contents_title ct ON sc.title_id = ct.title_id
+-- ORDER BY ct.title_id, sc.contents_id;
 
 
 
@@ -390,7 +390,7 @@ CREATE TABLE proposal (
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-DESC proposal;
+-- DESC proposal;
 
 INSERT INTO proposal(title_id, why, for_whom1, for_whom2, for_whom3) VALUES 
 (1, '4.5조원. 무신사의 2024년 거래액입니다. 
@@ -468,21 +468,21 @@ AI로 모든 서비스가 \'초개인화\'되고 있습니다. 하지만 섬세�
 '자신의 일에 대한 확신이 흔들릴 때, 새로운 방향이 필요하다면',
 '실패를 극복하고 더 나은 성장 방식을 찾고 싶다면');
 
-SELECT * FROM proposal;
+-- SELECT * FROM proposal;
 
 
-SELECT
-  ct.title_id,
-  ct.title AS series_title,
-  p.proposal_id,
-  p.why,
-  p.for_whom1,
-  p.for_whom2,
-  p.for_whom3,
-  p.created_at
-FROM proposal p
-INNER JOIN contents_title ct ON p.title_id = ct.title_id
-ORDER BY ct.title_id, p.proposal_id;
+-- SELECT
+--   ct.title_id,
+--   ct.title AS series_title,
+--   p.proposal_id,
+--   p.why,
+--   p.for_whom1,
+--   p.for_whom2,
+--   p.for_whom3,
+--   p.created_at
+-- FROM proposal p
+-- INNER JOIN contents_title ct ON p.title_id = ct.title_id
+-- ORDER BY ct.title_id, p.proposal_id;
 
 
 
@@ -498,7 +498,7 @@ CREATE TABLE contents_linker_map (
 -- 	title_id INT NOT NULL,
 --     linker_id INT NOT NULL
 -- );
-DESC contents_linker_map;
+-- DESC contents_linker_map;
 
 INSERT INTO contents_linker_map (contents_id, linker_id) VALUES 
 (1, 11),
@@ -520,7 +520,7 @@ INSERT INTO contents_linker_map (contents_id, linker_id) VALUES
 -- (22, 16),
 -- (29, 29);
 
-SELECT * FROM contents_linker_map;
+-- SELECT * FROM contents_linker_map;
 
 
 
@@ -536,7 +536,7 @@ CREATE TABLE contents_detail (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-DESC contents_detail;
+-- DESC contents_detail;
 
 INSERT INTO contents_detail (contents_id, sentence1, sentence2, sentence3, h3, p) VALUE 
 (1, 
@@ -569,34 +569,34 @@ NULL,
 '무신사 사옥 앞 조형물에서 포즈를 취하고 있는 박민재 실장. ©무신사 포토팀');
 
 
-SELECT * FROM contents_detail;
+-- SELECT * FROM contents_detail;
 
 -- 처음에 title_id랑 linker_id를 합쳐 놓지 않아서 contents_linker_map을 만들었는데 이걸 지우면 꼬이기 때문에 일단 살림
 -- title_id에 연결된거 활용하면 될거 같긴한데 어차피 디테일을 추가해야해서 냅둠
-SELECT
-  ct.title_id,
-  ct.title AS series_title,
-  sc.contents_id,
-  sc.sub_title,
-  sc.img_url,
-  sc.created_at,
-  cd.sentence1,
-  cd.sentence2,
-  cd.sentence3,
-  cd.h3,
-  cd.p,
-  l.linker_id,
-  l.author,
-  l.affiliation,
-  ld.image_url AS linker_details_img_url
-FROM contents_title ct
-JOIN series_contents sc ON ct.title_id = sc.title_id
-LEFT JOIN contents_linker_map clm ON sc.contents_id = clm.contents_id
-LEFT JOIN linker l ON clm.linker_id = l.linker_id
-LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
-LEFT JOIN contents_detail cd ON sc.contents_id = cd.contents_id
-WHERE sc.content_type = 'article'
-ORDER BY ct.title_id, sc.contents_id, l.linker_id;
+-- SELECT
+--   ct.title_id,
+--   ct.title AS series_title,
+--   sc.contents_id,
+--   sc.sub_title,
+--   sc.img_url,
+--   sc.created_at,
+--   cd.sentence1,
+--   cd.sentence2,
+--   cd.sentence3,
+--   cd.h3,
+--   cd.p,
+--   l.linker_id,
+--   l.author,
+--   l.affiliation,
+--   ld.image_url AS linker_details_img_url
+-- FROM contents_title ct
+-- JOIN series_contents sc ON ct.title_id = sc.title_id
+-- LEFT JOIN contents_linker_map clm ON sc.contents_id = clm.contents_id
+-- LEFT JOIN linker l ON clm.linker_id = l.linker_id
+-- LEFT JOIN linker_details ld ON l.linker_id = ld.linker_id
+-- LEFT JOIN contents_detail cd ON sc.contents_id = cd.contents_id
+-- WHERE sc.content_type = 'article'
+-- ORDER BY ct.title_id, sc.contents_id, l.linker_id;
 
 
 
@@ -622,7 +622,7 @@ CREATE TABLE series_combined_table (
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-DESC series_combined_table;
+-- DESC series_combined_table;
 
 INSERT INTO series_combined_table (
   title_id, proposal_id, title, sub_title, linkers, img_url, content_type,
@@ -630,54 +630,54 @@ INSERT INTO series_combined_table (
   linker_id, author, affiliation,
   created_at, updated_at
 )
-SELECT
-  sc.title_id,
-  p.proposal_id,
-  ct.title,
-  sc.sub_title,
-  sc.linkers,
-  sc.img_url,
-  sc.content_type,
-  p.why,
-  p.for_whom1,
-  p.for_whom2,
-  p.for_whom3,
-  l.linker_id,
-  l.author,
-  l.affiliation,
-  sc.created_at,
-  sc.updated_at
+-- SELECT
+--   sc.title_id,
+--   p.proposal_id,
+--   ct.title,
+--   sc.sub_title,
+--   sc.linkers,
+--   sc.img_url,
+--   sc.content_type,
+--   p.why,
+--   p.for_whom1,
+--   p.for_whom2,
+--   p.for_whom3,
+--   l.linker_id,
+--   l.author,
+--   l.affiliation,
+--   sc.created_at,
+--   sc.updated_at
 
-FROM
-  series_contents sc
-JOIN proposal p ON sc.title_id = p.title_id
-JOIN contents_title ct ON sc.title_id = ct.title_id
-JOIN contents_title_linker_map map ON sc.title_id = map.title_id
-JOIN linker l ON map.linker_id = l.linker_id;
+-- FROM
+--   series_contents sc
+-- JOIN proposal p ON sc.title_id = p.title_id
+-- JOIN contents_title ct ON sc.title_id = ct.title_id
+-- JOIN contents_title_linker_map map ON sc.title_id = map.title_id
+-- JOIN linker l ON map.linker_id = l.linker_id;
 
 
 -- 시리즈.js 시리즈Id에서 쓰고 있음
-SELECT
-    contents_id,
-    p.title_id,
-    p.proposal_id,
-    ct.title,
-    sc.sub_title,
-    sc.linkers,
-    sc.img_url,
-    sc.content_type,
-    p.why,
-    p.for_whom1,
-    p.for_whom2,
-    p.for_whom3,
-    sc.created_at,
-    p.created_at
-    FROM
-    proposal p
-    LEFT JOIN series_contents sc ON p.title_id = sc.title_id
-    LEFT JOIN contents_title ct ON p.title_id = ct.title_id;
+-- SELECT
+--     contents_id,
+--     p.title_id,
+--     p.proposal_id,
+--     ct.title,
+--     sc.sub_title,
+--     sc.linkers,
+--     sc.img_url,
+--     sc.content_type,
+--     p.why,
+--     p.for_whom1,
+--     p.for_whom2,
+--     p.for_whom3,
+--     sc.created_at,
+--     p.created_at
+--     FROM
+--     proposal p
+--     LEFT JOIN series_contents sc ON p.title_id = sc.title_id
+--     LEFT JOIN contents_title ct ON p.title_id = ct.title_id;
 
-SELECT * FROM series_combined_table;
+-- SELECT * FROM series_combined_table;
 
 
 -- 검색어 키워드 테이블 추가 - 위에 contents_id + linker연결 한거 대신 쓸것, 
@@ -686,7 +686,7 @@ CREATE TABLE keywords (
     name VARCHAR(50) NOT NULL
 );
 
-DESC keywords;
+-- DESC keywords;
 
 INSERT INTO keywords(name) VALUES 
 ('기획'),
@@ -710,7 +710,7 @@ INSERT INTO keywords(name) VALUES
 ('네트워킹'),
 ('협업');
 
-SELECT * FROM keywords;
+-- SELECT * FROM keywords;
 
 
 CREATE TABLE content_keywords_map (
@@ -720,7 +720,7 @@ CREATE TABLE content_keywords_map (
 );
 
 
-DESC content_keywords_map;
+-- DESC content_keywords_map;
 
 INSERT INTO content_keywords_map (contents_id, keyword_id) VALUES 
 (1, 9),
@@ -774,7 +774,7 @@ INSERT INTO content_keywords_map (contents_id, keyword_id) VALUES
 (38, 1), 
 (39, 15);
 
-SELECT * FROM content_keywords_map;
+-- SELECT * FROM content_keywords_map;
 
 CREATE TABLE linker_keywords_map (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -782,7 +782,7 @@ CREATE TABLE linker_keywords_map (
   keyword_id INT NOT NULL
 );
 
-DESC linker_keywords_map;
+-- DESC linker_keywords_map;
 
 
 INSERT INTO linker_keywords_map (linker_id, keyword_id) VALUES 
@@ -848,7 +848,7 @@ INSERT INTO linker_keywords_map (linker_id, keyword_id) VALUES
 (36, 10);
 
 
-SELECT * FROM linker_keywords_map;
+-- SELECT * FROM linker_keywords_map;
 
 
 
@@ -859,7 +859,7 @@ CREATE TABLE proposal_keywords_map (
   keyword_id INT NOT NULL
 );
 
-DESC proposal_keywords_map;
+-- DESC proposal_keywords_map;
 
 INSERT INTO proposal_keywords_map (proposal_id, keyword_id) VALUES 
 (1, 1),
@@ -883,7 +883,7 @@ INSERT INTO proposal_keywords_map (proposal_id, keyword_id) VALUES
 (9, 2), 
 (9, 7);
 
-SELECT * FROM proposal_keywords_map;
+-- SELECT * FROM proposal_keywords_map;
 
 
 

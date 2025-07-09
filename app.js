@@ -8,6 +8,7 @@ const cors = require('cors');
 
 // 리소스가 있는 위치 경로 nextjs 폴더경로랑은 다른거임
 const indexRouter = require('./routes/');
+const userRouter = require('./routes/user');
 const occupationRouter = require('./routes/occupation');
 const linkerRouter = require('./routes/linker');
 const seriesRouter = require('./routes/series');
@@ -64,6 +65,7 @@ app.use(
 
 // 라우터 설정
 app.use(indexRouter);
+app.use(userRouter);
 app.use(occupationRouter);
 app.use(linkerRouter);
 app.use(seriesRouter);
