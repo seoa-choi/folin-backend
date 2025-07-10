@@ -1,0 +1,10 @@
+{
+  "tabs": [
+    { "label": "전체", "value": "total" },
+    { "label": "시리즈", "value": "book" },
+    { "label": "아티클", "value": "story" },
+    { "label": "비디오", "value": "vod" },
+    { "label": "세미나", "value": "seminar" },
+    { "label": "링커", "value": "linker" }
+  ]
+}

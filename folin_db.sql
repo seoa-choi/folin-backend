@@ -887,6 +887,8 @@ INSERT INTO proposal_keywords_map (proposal_id, keyword_id) VALUES
 
 
 
+
+
 -- -- 콘텐츠
 -- SELECT sc.*
 -- FROM series_contents sc
@@ -895,6 +897,47 @@ INSERT INTO proposal_keywords_map (proposal_id, keyword_id) VALUES
 
 -- WHERE k.name = '커리어'
 -- LIMIT 0, 1000;
+
+-- contents_title 포함 
+SELECT 
+  sc.contents_id,
+  ct.title,                 
+  sc.sub_title,
+  sc.linkers,
+  sc.img_url,
+  sc.content_type,
+  k.name AS keyword        
+FROM series_contents sc
+JOIN content_keywords_map ckm ON sc.contents_id = ckm.contents_id
+JOIN keywords k ON ckm.keyword_id = k.keyword_id
+JOIN contents_title ct ON sc.title_id = ct.title_id;
+
+
+
+-- linkerDb 수정 해야하는지 아직 판단안함
+
+
+-- proposal title 중복제거
+SELECT 
+  p.proposal_id,
+  ct.title,
+  p.created_at,
+  p.for_whom1,
+  p.for_whom2,
+  p.for_whom3,
+  p.title_id,
+  p.why,
+  GROUP_CONCAT(DISTINCT k.name SEPARATOR ', ') AS keywords
+FROM proposal p
+JOIN proposal_keywords_map pkm ON p.proposal_id = pkm.proposal_id
+JOIN keywords k ON pkm.keyword_id = k.keyword_id
+JOIN contents_title ct ON ct.title_id = p.title_id
+GROUP BY p.proposal_id, ct.title, p.created_at, p.for_whom1, p.for_whom2, p.for_whom3, p.title_id, p.why;
+
+
+
+
+
 
 -- -- 링커
 -- SELECT l.* FROM linker l
