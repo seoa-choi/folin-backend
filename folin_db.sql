@@ -304,7 +304,6 @@ INSERT INTO contents_title_linker_map (title_id, linker_id) VALUES
 -- ORDER BY ct.title_id, l.linker_id;
 
 
-
 CREATE TABLE series_contents (
 	contents_id INT AUTO_INCREMENT PRIMARY KEY,
     title_id INT NOT NULL,
@@ -331,9 +330,9 @@ INSERT INTO series_contents (title_id, sub_title, linkers, img_url) VALUES
 (16, '[무료] 쿠팡플레이 인사이드: 어떻게 국내 OTT 1위 됐나', '쿠팡플레이', '/images/series/1744853397478_a_10796-m.jpg'),
 (3, '"규율? 오히려 자부심 된다" 마일스톤 커피만의 환대 비결 4', '김형준', '/images/series/1747369683756_a_11391-m3.jpg'),
 (3, '"카페는 끝인상 비즈니스" 디테일로 승부한 컨플릭트 스토어', '박진훈 우창균', '/images/series/1744612710287_a_10566-m.jpg'),
-(15, '신수정의 트레이닝① 퇴사가 어려워진 40대에게', '신수정', '/images/series/1743963552433_10.jpg'),
-(15, '신수정의 트레이닝② 일 잘하면 승진 대신 일을 준다', '신수정', '/images/series/1743963421621_20.jpg'),
 (15, '신수정의 트레이닝③ 마이크로 매니저를 질리게 하라', '신수정', '/images/series/1743963450146_30.jpg'),
+(15, '신수정의 트레이닝② 일 잘하면 승진 대신 일을 준다', '신수정', '/images/series/1743963421621_20.jpg'),
+(15, '신수정의 트레이닝① 퇴사가 어려워진 40대에게', '신수정', '/images/series/1743963552433_10.jpg'),
 (9, '동서식품① 카누 "1등의 변화는 제 살을 깎는 것"', '김대철', '/images/series/1743349499880_a_id-m12.jpg'),
 (9, '동서식품② 시장점유율 90%, 맥심이 45년간 정상을 지킨 법', '하치수', '/images/series/1743333644564_a_id-m2.jpg'),
 (10, '"처음부터 성공하려 하면 반드시 망해" 토스의 실험 레시피', '장민영 박서진', '/images/series/1741854407873_a_10451-m.jpg'),
@@ -680,7 +679,8 @@ INSERT INTO series_combined_table (
 -- SELECT * FROM series_combined_table;
 
 
--- 검색어 키워드 테이블 추가 - 위에 contents_id + linker연결 한거 대신 쓸것, 
+-- 검색어 키워드 테이블 추가 - 위에 contents_id + linker연결 한거 대신 쓸것,
+
 CREATE TABLE keywords (
 	keyword_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL
@@ -711,7 +711,6 @@ INSERT INTO keywords(name) VALUES
 ('협업');
 
 -- SELECT * FROM keywords;
-
 
 CREATE TABLE content_keywords_map (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -899,57 +898,57 @@ INSERT INTO proposal_keywords_map (proposal_id, keyword_id) VALUES
 -- LIMIT 0, 1000;
 
 -- contents_title 포함 
-SELECT 
-  sc.contents_id,
-  ct.title,                 
-  sc.sub_title,
-  sc.linkers,
-  sc.img_url,
-  sc.content_type,
-  k.name AS keyword        
-FROM series_contents sc
-JOIN content_keywords_map ckm ON sc.contents_id = ckm.contents_id
-JOIN keywords k ON ckm.keyword_id = k.keyword_id
-JOIN contents_title ct ON sc.title_id = ct.title_id;
+-- SELECT 
+--   sc.contents_id,
+--   ct.title,
+--   sc.sub_title,
+--   sc.linkers,
+--   sc.img_url,
+--   sc.content_type,
+--   GROUP_CONCAT(k.name SEPARATOR ', ') AS keywords
+-- FROM series_contents sc
+-- JOIN content_keywords_map ckm ON sc.contents_id = ckm.contents_id
+-- JOIN keywords k ON ckm.keyword_id = k.keyword_id
+-- JOIN contents_title ct ON sc.title_id = ct.title_id
+-- GROUP BY sc.contents_id;
 
 
 
--- linkerDb 수정 해야하는지 아직 판단안함
-
-
--- proposal title 중복제거
-SELECT 
-  p.proposal_id,
-  ct.title,
-  p.created_at,
-  p.for_whom1,
-  p.for_whom2,
-  p.for_whom3,
-  p.title_id,
-  p.why,
-  GROUP_CONCAT(DISTINCT k.name SEPARATOR ', ') AS keywords
-FROM proposal p
-JOIN proposal_keywords_map pkm ON p.proposal_id = pkm.proposal_id
-JOIN keywords k ON pkm.keyword_id = k.keyword_id
-JOIN contents_title ct ON ct.title_id = p.title_id
-GROUP BY p.proposal_id, ct.title, p.created_at, p.for_whom1, p.for_whom2, p.for_whom3, p.title_id, p.why;
-
-
-
-
-
-
--- -- 링커
--- SELECT l.* FROM linker l
--- JOIN linker_keywords_map lkm ON l.linker_id = lkm.linker_id
--- JOIN keywords k ON lkm.keyword_id = k.keyword_id
-
--- WHERE k.name = '기획';
 
 -- -- proposal
 -- SELECT p.*
 -- FROM proposal p
 -- JOIN proposal_keywords_map pkm ON p.proposal_id = pkm.proposal_id
 -- JOIN keywords k ON pkm.keyword_id = k.keyword_id;
+
+
+
+
+
+
+
+
+
+
+-- proposal title 중복제거
+-- SELECT 
+--   p.proposal_id,
+--   ct.title,
+--   p.created_at,
+--   p.for_whom1,
+--   p.for_whom2,
+--   p.for_whom3,
+--   p.title_id,
+--   p.why,
+--   GROUP_CONCAT(DISTINCT k.name SEPARATOR ', ') AS keywords
+-- FROM proposal p
+-- JOIN proposal_keywords_map pkm ON p.proposal_id = pkm.proposal_id
+-- JOIN keywords k ON pkm.keyword_id = k.keyword_id
+-- JOIN contents_title ct ON ct.title_id = p.title_id
+-- GROUP BY p.proposal_id, ct.title, p.created_at, p.for_whom1, p.for_whom2, p.for_whom3, p.title_id, p.why;
+
+
+
+
 
 SHOW DATABASES;
