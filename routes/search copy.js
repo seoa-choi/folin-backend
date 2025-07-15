@@ -14,7 +14,21 @@ router.get('/search', (req, res) => {
   const keywordParam = keyword || '';
   const likeKeyword = `%${keywordParam}%`;
 
-  const contentsParams = [keywordParam, likeKeyword, limit, offset];
+  // const contentsParams = [
+  //   keywordParam, // ? = ''
+  //   likeKeyword, // k.name LIKE ?
+  //   likeKeyword, // ct.title LIKE ?
+  //   likeKeyword, // sc.sub_title LIKE ?
+  //   likeKeyword, // sc.linkers LIKE ?
+  //   limit,
+  //   offset,
+  // ];
+  const isKeyword = keyword.trim().length > 0;
+
+  const contentsParams = isKeyword
+    ? [likeKeyword, likeKeyword, likeKeyword, likeKeyword, limit, offset]
+    : [limit, offset];
+
   const contentsNoLimitParams = [keywordParam, likeKeyword, limit, offset];
   const linkerParams = [keywordParam, likeKeyword, limit, offset];
   const proposalParams = [keywordParam, likeKeyword, limit, offset];
@@ -33,7 +47,12 @@ FROM series_contents sc
 JOIN content_keywords_map ckm ON sc.contents_id = ckm.contents_id
 JOIN keywords k ON ckm.keyword_id = k.keyword_id
 JOIN contents_title ct ON sc.title_id = ct.title_id
-WHERE ? = '' OR k.name LIKE ?
+WHERE ? = '' OR (
+  k.name LIKE ? OR
+  ct.title LIKE ? OR
+  sc.sub_title LIKE ? OR
+  sc.linkers LIKE ?
+)
 GROUP BY sc.contents_id
 LIMIT ? OFFSET ?
 `;
@@ -50,7 +69,12 @@ FROM series_contents sc
 JOIN content_keywords_map ckm ON sc.contents_id = ckm.contents_id
 JOIN keywords k ON ckm.keyword_id = k.keyword_id
 JOIN contents_title ct ON sc.title_id = ct.title_id
-WHERE ? = '' OR k.name LIKE ?
+WHERE ? = '' OR (
+  k.name LIKE ? OR
+  ct.title LIKE ? OR
+  sc.sub_title LIKE ? OR
+  sc.linkers LIKE ?
+)
 GROUP BY sc.contents_id`;
 
   const linkerDb = `SELECT l.linker_id,
@@ -65,7 +89,12 @@ GROUP BY sc.contents_id`;
       JOIN linker_details ld ON l.linker_id = ld.linker_id
       JOIN linker_keywords_map lkm ON l.linker_id = lkm.linker_id
       JOIN keywords k ON lkm.keyword_id = k.keyword_id
-WHERE ? = '' OR k.name LIKE ?
+WHERE ? = '' OR (
+  k.name LIKE ? OR
+  l.comment LIKE ? OR
+  l.author LIKE ? OR
+  l.affiliation LIKE ?
+)
       GROUP BY l.linker_id
       LIMIT ? OFFSET ?`;
 
@@ -84,7 +113,12 @@ JOIN proposal_keywords_map pkm ON p.proposal_id = pkm.proposal_id
 JOIN keywords k ON pkm.keyword_id = k.keyword_id
 JOIN contents_title ct ON ct.title_id = p.title_id
 GROUP BY p.proposal_id, ct.title, p.created_at, p.for_whom1, p.for_whom2, p.for_whom3, p.title_id, p.why
-WHERE ? = '' OR k.name LIKE ?
+WHERE ? = '' OR (
+  k.name LIKE ? OR
+  ct.title LIKE ? OR
+  p.for_whom1 LIKE ? OR
+  p.why LIKE ?
+)
     LIMIT ? OFFSET ?`;
 
   connection.query(contentsDb, contentsParams, (err, contentsResult) => {
@@ -92,13 +126,13 @@ WHERE ? = '' OR k.name LIKE ?
       return res.status(500).json({
         error: 'contents error',
         contentsDb: [],
-        contentsDbNoLimit: noLimitcts,
-        linkerDb: linkerResult,
-        proposalDb: proposalResult,
+        contentsDbNoLimit: [],
+        linkerDb: [],
+        proposalDb: [],
         counts: {
-          total: contentsResult.length + linkerResult.length,
-          contents: contentsResult.length,
-          linker: linkerResult.length,
+          total: 0,
+          contents: 0,
+          linker: 0,
           proposal: 0,
           vod: 0,
           seminar: 0,
@@ -110,20 +144,36 @@ WHERE ? = '' OR k.name LIKE ?
       contentsDbNoLimit,
       contentsNoLimitParams,
       (err, noLimitcts) => {
-        if (err) return res.status(500).send('noLimit error');
+        if (err)
+          return res.status(500).json({
+            error: 'contentsNoLimit error',
+            contentsDb: [],
+            contentsDbNoLimit: [],
+            linkerDb: [],
+            proposalDb: [],
+            counts: {
+              total: 0,
+              contents: 0,
+              linker: 0,
+              proposal: 0,
+              vod: 0,
+              seminar: 0,
+            },
+            tabOps,
+          });
 
         connection.query(linkerDb, linkerParams, (err, linkerResult) => {
           if (err)
             return res.status(500).json({
               error: 'linkers error',
-              contentsDb: contentsResult,
-              contentsDbNoLimit: noLimitcts,
+              contentsDb: [],
+              contentsDbNoLimit: [],
               linkerDb: [],
-              proposalDb: proposalResult,
+              proposalDb: [],
               counts: {
-                total: contentsResult.length + linkerResult.length,
-                contents: contentsResult.length,
-                linker: linkerResult.length,
+                total: 0,
+                contents: 0,
+                linker: 0,
                 proposal: 0,
                 vod: 0,
                 seminar: 0,
@@ -138,14 +188,14 @@ WHERE ? = '' OR k.name LIKE ?
               if (err)
                 return res.status(500).json({
                   error: 'proposal error',
-                  contentsDb: contentsResult,
-                  contentsDbNoLimit: noLimitcts,
-                  linkerDb: linkerResult,
-                  proposalDb: [], // 빈 배열로 응답
+                  contentsDb: [],
+                  contentsDbNoLimit: [],
+                  linkerDb: [],
+                  proposalDb: [],
                   counts: {
-                    total: contentsResult.length + linkerResult.length,
-                    contents: contentsResult.length,
-                    linker: linkerResult.length,
+                    total: 0,
+                    contents: 0,
+                    linker: 0,
                     proposal: 0,
                     vod: 0,
                     seminar: 0,
