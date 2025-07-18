@@ -14,10 +14,34 @@ router.get('/search', (req, res) => {
   const keywordParam = keyword || '';
   const likeKeyword = `%${keywordParam}%`;
 
-  const contentsParams = [keywordParam, likeKeyword, limit, offset];
+  const contentsParams = [
+    keywordParam,
+    likeKeyword,
+    likeKeyword,
+    likeKeyword,
+    likeKeyword,
+    likeKeyword,
+    limit,
+    offset,
+  ];
   const contentsNoLimitParams = [keywordParam, likeKeyword, limit, offset];
-  const linkerParams = [keywordParam, likeKeyword, limit, offset];
-  const proposalParams = [keywordParam, likeKeyword, limit, offset];
+  const linkerParams = [
+    keywordParam,
+    likeKeyword,
+    likeKeyword,
+    likeKeyword,
+    likeKeyword,
+    limit,
+    offset,
+  ];
+  const proposalParams = [
+    keywordParam,
+    likeKeyword,
+    likeKeyword,
+    likeKeyword,
+    limit,
+    offset,
+  ];
   // ${keyword ? 'WHERE k.name = ?' : ''}
   // ${keyword ? 'WHERE k.name LIKE CONCAT("%", ?, "%")' : ''}
   const contentsDb = `
@@ -33,11 +57,16 @@ FROM series_contents sc
 JOIN content_keywords_map ckm ON sc.contents_id = ckm.contents_id
 JOIN keywords k ON ckm.keyword_id = k.keyword_id
 JOIN contents_title ct ON sc.title_id = ct.title_id
-WHERE ? = '' OR k.name LIKE ?
+WHERE ? = '' OR k.name LIKE ? OR
+ct.title LIKE ? OR 
+sc.sub_title LIKE ? OR
+sc.linkers LIKE ? OR
+sc.content_type LIKE ?
 GROUP BY sc.contents_id
 LIMIT ? OFFSET ?
 `;
 
+  // WHERE ? = '' OR k.name LIKE ? 전체 데이터가 필요해서 조건 없음
   const contentsDbNoLimit = `SELECT 
   sc.contents_id,
   ct.title,
@@ -50,7 +79,6 @@ FROM series_contents sc
 JOIN content_keywords_map ckm ON sc.contents_id = ckm.contents_id
 JOIN keywords k ON ckm.keyword_id = k.keyword_id
 JOIN contents_title ct ON sc.title_id = ct.title_id
-WHERE ? = '' OR k.name LIKE ?
 GROUP BY sc.contents_id`;
 
   const linkerDb = `SELECT l.linker_id,
@@ -65,7 +93,11 @@ GROUP BY sc.contents_id`;
       JOIN linker_details ld ON l.linker_id = ld.linker_id
       JOIN linker_keywords_map lkm ON l.linker_id = lkm.linker_id
       JOIN keywords k ON lkm.keyword_id = k.keyword_id
-WHERE ? = '' OR k.name LIKE ?
+WHERE ? = '' OR 
+      k.name LIKE ? OR 
+      l.comment LIKE ? OR 
+      l.author LIKE ? OR 
+      l.affiliation LIKE ?
       GROUP BY l.linker_id
       LIMIT ? OFFSET ?`;
 
@@ -83,8 +115,11 @@ FROM proposal p
 JOIN proposal_keywords_map pkm ON p.proposal_id = pkm.proposal_id
 JOIN keywords k ON pkm.keyword_id = k.keyword_id
 JOIN contents_title ct ON ct.title_id = p.title_id
+WHERE ? = '' OR 
+k.name LIKE ? OR
+ct.title LIKE ? OR
+p.why LIKE ?
 GROUP BY p.proposal_id, ct.title, p.created_at, p.for_whom1, p.for_whom2, p.for_whom3, p.title_id, p.why
-WHERE ? = '' OR k.name LIKE ?
     LIMIT ? OFFSET ?`;
 
   connection.query(contentsDb, contentsParams, (err, contentsResult) => {
